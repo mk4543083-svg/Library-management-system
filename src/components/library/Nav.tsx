@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { BookOpen, LogOut, LayoutDashboard, Shield, LogIn } from "lucide-react";
+import { BookOpen, LogOut, LayoutDashboard, Shield, LogIn, Library } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Nav() {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, isLibrarian, loading } = useAuth();
   const router = useRouter();
   const qc = useQueryClient();
 
@@ -45,6 +45,9 @@ export function Nav() {
           {user && (
             <Link to="/dashboard" className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-secondary hover:text-foreground [&.active]:text-primary [&.active]:bg-secondary">My Books</Link>
           )}
+          {isLibrarian && (
+            <Link to="/librarian" className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-secondary hover:text-foreground [&.active]:text-primary [&.active]:bg-secondary">Catalog Mgmt</Link>
+          )}
           {isAdmin && (
             <Link to="/admin" className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-secondary hover:text-foreground [&.active]:text-primary [&.active]:bg-secondary">Admin</Link>
           )}
@@ -62,6 +65,7 @@ export function Nav() {
                 <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="h-4 w-4" />My Books</Link></DropdownMenuItem>
+                {isLibrarian && <DropdownMenuItem asChild><Link to="/librarian"><Library className="h-4 w-4" />Catalog Mgmt</Link></DropdownMenuItem>}
                 {isAdmin && <DropdownMenuItem asChild><Link to="/admin"><Shield className="h-4 w-4" />Admin</Link></DropdownMenuItem>}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut}><LogOut className="h-4 w-4" />Sign out</DropdownMenuItem>
