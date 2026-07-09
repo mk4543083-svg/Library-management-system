@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+export type Role = "admin" | "librarian" | "member";
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<"admin" | "member" | null>(null);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,13 +14,12 @@ export function useAuth() {
 
     const load = async (u: User | null) => {
       if (!u) {
-        setRole(null);
+        setRoles([]);
         return;
       }
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", u.id);
       if (!mounted) return;
-      const isAdmin = data?.some((r) => r.role === "admin");
-      setRole(isAdmin ? "admin" : "member");
+      setRoles((data ?? []).map((r) => r.role as Role));
     };
 
     supabase.auth.getUser().then(({ data }) => {
@@ -39,5 +40,7 @@ export function useAuth() {
     };
   }, []);
 
-  return { user, role, loading, isAdmin: role === "admin" };
+  const isAdmin = roles.includes("admin");
+  const isLibrarian = roles.includes("librarian") || isAdmin;
+  return { user, roles, loading, isAdmin, isLibrarian };
 }
