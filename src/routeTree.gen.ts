@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BooksIdRouteImport } from './routes/books.$id'
+import { Route as AuthenticatedLibrarianRouteImport } from './routes/_authenticated/librarian'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
@@ -41,6 +42,11 @@ const BooksIdRoute = BooksIdRouteImport.update({
   path: '/books/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedLibrarianRoute = AuthenticatedLibrarianRouteImport.update({
+  id: '/librarian',
+  path: '/librarian',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/librarian': typeof AuthenticatedLibrarianRoute
   '/books/$id': typeof BooksIdRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/librarian': typeof AuthenticatedLibrarianRoute
   '/books/$id': typeof BooksIdRoute
 }
 export interface FileRoutesById {
@@ -76,13 +84,28 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/librarian': typeof AuthenticatedLibrarianRoute
   '/books/$id': typeof BooksIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/catalog' | '/admin' | '/dashboard' | '/books/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/catalog'
+    | '/admin'
+    | '/dashboard'
+    | '/librarian'
+    | '/books/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/catalog' | '/admin' | '/dashboard' | '/books/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/catalog'
+    | '/admin'
+    | '/dashboard'
+    | '/librarian'
+    | '/books/$id'
   id:
     | '__root__'
     | '/'
@@ -91,6 +114,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/librarian'
     | '/books/$id'
   fileRoutesById: FileRoutesById
 }
@@ -139,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/librarian': {
+      id: '/_authenticated/librarian'
+      path: '/librarian'
+      fullPath: '/librarian'
+      preLoaderRoute: typeof AuthenticatedLibrarianRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -159,11 +190,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLibrarianRoute: typeof AuthenticatedLibrarianRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLibrarianRoute: AuthenticatedLibrarianRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
